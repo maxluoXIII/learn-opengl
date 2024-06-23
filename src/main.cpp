@@ -139,17 +139,15 @@ int main() {
         return -1;
     }
 
-    // Create a rectangle
+    // Draw two triangles
     // Set up the vertex buffer
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-        -0.5f,  0.5f, 0.0f,
-         0.5f,  0.5f, 0.0f
-    };
-    unsigned int indices[] = {
-        0, 1, 3,
-        0, 2, 3
+         -0.5f, -0.5f, 0.0f, // First triangle
+          0.0f, -0.5f, 0.0f,
+        -0.25f,  0.5f, 0.0f,
+          0.5f, -0.5f, 0.0f, // Second triangle
+          0.0f, -0.5f, 0.0f,
+         0.25f,  0.5f, 0.0f
     };
 
     unsigned int VAO;
@@ -160,11 +158,6 @@ int main() {
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // Tell OpenGL how to interpret the vertex attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -184,8 +177,7 @@ int main() {
 		// draw
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
