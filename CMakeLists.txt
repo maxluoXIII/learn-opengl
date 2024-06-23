@@ -4,13 +4,23 @@ cmake_minimum_required(VERSION 3.29)
 
 project(HelloOpenGL)
 
+# We are using C++20 modules
+set(CMAKE_CXX_STANDARD 20)
+
 find_package(OpenGL REQUIRED)
 
 set(OPENGL_INCLUDE_PATH "C:\\Users\\gutha\\libs\\OpenGL\\include" CACHE PATH "Location of opengl headers")
 set(GLFW_LIB_PATH "C:\\Users\\gutha\\libs\\OpenGL\\lib\\glfw3.lib" CACHE PATH "Location of glfw lib")
 
+add_library(Exception)
+target_sources(Exception
+    PUBLIC
+        FILE_SET CXX_MODULES FILES
+            include/Exception.cppm
+)
+
 set(SOURCE_FILES
-    src/test.cpp
+    src/main.cpp
     src/glad.c
 )
 set(HEADER_FILES "")
@@ -27,4 +37,5 @@ add_executable(hello
 target_link_libraries(hello
     ${OPENGL_LIBRARY}
     ${GLFW_LIB_PATH}
+    Exception
 )
