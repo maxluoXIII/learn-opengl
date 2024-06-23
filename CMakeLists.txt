@@ -9,8 +9,21 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(OpenGL REQUIRED)
 
-set(OPENGL_INCLUDE_PATH "C:\\Users\\gutha\\libs\\OpenGL\\include" CACHE PATH "Location of opengl headers")
-set(GLFW_LIB_PATH "C:\\Users\\gutha\\libs\\OpenGL\\lib\\glfw3.lib" CACHE PATH "Location of glfw lib")
+# Set these variables if not using a preset
+set(OPENGL_INCLUDE_PATH "" CACHE PATH "Location of opengl headers")
+set(GLFW_LIB_PATH "" CACHE PATH "Location of glfw lib")
+
+if(NOT DEFINED OPENGL_INCLUDE_PATH
+    OR NOT IS_DIRECTORY "${OPENGL_INCLUDE_PATH}"
+    OR NOT DEFINED GLFW_LIB_PATH
+    OR NOT EXISTS "${GLFW_LIB_PATH}"
+)
+    message(FATAL_ERROR
+        "OPENGL_INCLUDE_PATH and GLFW_LIB_PATH must be set:\n"
+        "OPENGL_INCLUDE_PATH: " ${OPENGL_INCLUDE_PATH} "\n"
+        "GLFW_LIB_PATH: " ${GLFW_LIB_PATH}
+    )
+endif()
 
 add_library(Exception)
 target_sources(Exception

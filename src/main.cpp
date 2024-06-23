@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <array>
 #include <format>
 #include <iostream>
 #include <string>
@@ -141,16 +142,17 @@ int main() {
 
     // Draw two triangles
     // Set up the vertex buffer
-    float vertices[] = {
-         -0.5f, -0.5f, 0.0f, // First triangle
-          0.0f, -0.5f, 0.0f,
-        -0.25f,  0.5f, 0.0f,
-    };
-
-    float vertices2[] = {
-          0.5f, -0.5f, 0.0f, // Second triangle
-          0.0f, -0.5f, 0.0f,
-         0.25f,  0.5f, 0.0f
+    std::array vertices {
+        std::array {
+             -0.5f, -0.5f, 0.0f, // First triangle
+              0.0f, -0.5f, 0.0f,
+            -0.25f,  0.5f, 0.0f,
+        },
+        std::array {
+              0.5f, -0.5f, 0.0f, // Second triangle
+              0.0f, -0.5f, 0.0f,
+             0.25f,  0.5f, 0.0f
+        }
     };
 
     unsigned int VAO[2];
@@ -160,7 +162,7 @@ int main() {
     unsigned int VBO[2];
     glGenBuffers(2, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]), vertices[0].data(), GL_STATIC_DRAW);
 
     // Tell OpenGL how to interpret the vertex attributes
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -169,7 +171,7 @@ int main() {
     // set up VAO[1]
     glBindVertexArray(VAO[1]);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[1]), vertices[1].data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -188,10 +190,10 @@ int main() {
 		// draw
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO[0]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, vertices[0].size());
 
         glBindVertexArray(VAO[1]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, vertices[1].size());
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
