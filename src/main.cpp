@@ -6,21 +6,7 @@
 #include <iostream>
 #include <string>
 
-import Exception;
-
-const char* vertexShaderSource = 
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main() {\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-
-const char* fragmentShaderSource =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main() {\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\0";
+import Shader;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -30,57 +16,6 @@ void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
-}
-
-unsigned int createAndCompileShader(const char* shaderSource, unsigned int shaderType) {
-    unsigned int shader = glCreateShader(shaderType);
-
-    // Compile the shader
-    glShaderSource(shader, 1, &shaderSource, NULL);
-    glCompileShader(shader);
-
-    // Check whether compilation was successful
-    int success;
-    constexpr size_t LOG_LENGTH = 512;
-    char infoLog[LOG_LENGTH];
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(shader, LOG_LENGTH, NULL, infoLog);
-        throw ShaderCompilationException{infoLog, shaderType};
-    }
-
-    return shader;
-}
-
-bool createShaderProgram(unsigned int &shaderProgram) {
-    // Set up shaders
-
-    // Compile the vertex shader
-    unsigned int vertexShader = createAndCompileShader(vertexShaderSource, GL_VERTEX_SHADER);
-
-    // Compile the fragment shader
-    unsigned int fragmentShader = createAndCompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-
-    // Link the compiled shaders into a shader program
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // Check whether linking was successful
-    int success;
-    constexpr size_t LOG_LENGTH = 512;
-    char infoLog[LOG_LENGTH];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, LOG_LENGTH, NULL, infoLog);
-        throw ShaderLinkingException{infoLog};
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    return true;
 }
 
 int main() {
@@ -111,12 +46,13 @@ int main() {
 	// set callback to set viewport size when window is resized
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    unsigned int shaderProgram;
+    ShaderProgram *shaderProgram = nullptr;
+
     try {
-        createShaderProgram(shaderProgram);
+        shaderProgram = new ShaderProgram{1.0f, 0.5f, 0.2f, 1.0f};
     } catch (ShaderCompilationException& e) {
         std::string shaderTypeString;
-        switch(e.getShaderType()) {
+        switch(static_cast<int>(e.getShaderType())) {
             case GL_VERTEX_SHADER:
                 shaderTypeString = "VERTEX";
                 break;
@@ -139,7 +75,6 @@ int main() {
         glfwTerminate();
         return -1;
     }
-
     // Draw two triangles
     // Set up the vertex buffer
     std::array vertices {
@@ -188,7 +123,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw
-        glUseProgram(shaderProgram);
+        glUseProgram(shaderProgram->getId());
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, vertices[0].size());
 

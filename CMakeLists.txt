@@ -4,9 +4,6 @@ cmake_minimum_required(VERSION 3.29)
 
 project(HelloOpenGL)
 
-# We are using C++20 modules
-set(CMAKE_CXX_STANDARD 20)
-
 find_package(OpenGL REQUIRED)
 
 # Set these variables if not using a preset
@@ -25,18 +22,26 @@ if(NOT DEFINED OPENGL_INCLUDE_PATH
     )
 endif()
 
-add_library(Exception)
-target_sources(Exception
+add_library(Shader)
+target_compile_features(Shader PUBLIC cxx_std_20)
+target_sources(Shader
     PUBLIC
         FILE_SET CXX_MODULES FILES
-            include/Exception.cppm
+            include/Shader.cppm
+            include/Shader-Exception.cppm
+            include/Shader-Types.cppm
+        PRIVATE
+            src/Shader-Exception.cpp
+            src/Shader.cpp
 )
 
 set(SOURCE_FILES
     src/main.cpp
     src/glad.c
 )
-set(HEADER_FILES "")
+set(HEADER_FILES
+    ""
+)
 
 include_directories(
     ${OPENGL_INCLUDE_PATH}
@@ -46,9 +51,9 @@ add_executable(hello
     ${HEADER_FILES}
     ${SOURCE_FILES}
 )
-
+target_compile_features(hello PUBLIC cxx_std_20)
 target_link_libraries(hello
     ${OPENGL_LIBRARY}
     ${GLFW_LIB_PATH}
-    Exception
+    Shader
 )
