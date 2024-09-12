@@ -26,14 +26,14 @@ constexpr const char* FRAGMENT_SHADER_SOURCE_TEMPLATE =
     "   FragColor = vec4({}, {}, {}, {});\n"
     "}}\0";
 
-Shader::Shader(unsigned int id)
+Shader::Shader(GLuint id)
     : mId{id} {}
 
 Shader::~Shader() {
     glDeleteShader(mId);
 }
 
-unsigned int Shader::getId() const {
+GLuint Shader::getId() const {
     return mId;
 }
 
@@ -99,7 +99,11 @@ ShaderProgram::ShaderProgram(float r, float g, float b, float a)
     pInitialize({r, g, b, a});
 }
 
-unsigned int ShaderProgram::getId() const {
+GLuint ShaderProgram::getId() const {
+    return mId;
+}
+
+ShaderProgram::operator GLuint() const {
     return mId;
 }
 

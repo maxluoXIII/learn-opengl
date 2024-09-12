@@ -5,6 +5,7 @@
 #include <format>
 #include <iostream>
 #include <string>
+#include <memory>
 
 import Shader;
 
@@ -46,10 +47,10 @@ int main() {
 	// set callback to set viewport size when window is resized
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    ShaderProgram *shaderProgram = nullptr;
+    std::unique_ptr<ShaderProgram> shaderProgram{};
 
     try {
-        shaderProgram = new ShaderProgram{1.0f, 0.5f, 0.2f, 1.0f};
+        shaderProgram.reset(new ShaderProgram{1.0f, 0.5f, 0.2f, 1.0f});
     } catch (ShaderCompilationException& e) {
         std::string shaderTypeString;
         switch(static_cast<int>(e.getShaderType())) {
@@ -90,11 +91,11 @@ int main() {
         }
     };
 
-    unsigned int VAO[2];
+    GLuint VAO[2];
     glGenVertexArrays(2, VAO);
     glBindVertexArray(VAO[0]);
 
-    unsigned int VBO[2];
+    GLuint VBO[2];
     glGenBuffers(2, VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]), vertices[0].data(), GL_STATIC_DRAW);
@@ -123,7 +124,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw
-        glUseProgram(shaderProgram->getId());
+        glUseProgram(*shaderProgram);
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, vertices[0].size());
 

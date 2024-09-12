@@ -10,21 +10,21 @@ export import :Exception;
 
 class Shader {
 public:
-    Shader(unsigned int id);
+    Shader(GLuint id);
     ~Shader();
 
     // Prevent copies because we should only tell OpenGL to delete the shader once
     Shader(const Shader&) = delete;
     Shader& operator=(const Shader&) = delete;
 
-    unsigned int getId() const;
+    GLuint getId() const;
 
     static constexpr size_t LOG_LENGTH = 512;
 
 protected:
     void pCheckCompileStatus(ShaderType shaderType);
 
-    unsigned int mId;
+    GLuint mId;
 };
 
 class VertexShader : public Shader {
@@ -48,12 +48,13 @@ public:
     ShaderProgram(std::array<float, 4> color);
     ShaderProgram(float r, float g, float b, float a);
 
-    unsigned int getId() const;
+    GLuint getId() const;
+    operator GLuint() const;
 
     static constexpr size_t LOG_LENGTH = 512;
 
 private:
     void pInitialize(std::array<float, 4> color);
 
-    unsigned int mId;
+    GLuint mId;
 };
