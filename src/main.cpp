@@ -47,10 +47,12 @@ int main() {
 	// set callback to set viewport size when window is resized
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    std::unique_ptr<ShaderProgram> shaderProgram{};
+    std::unique_ptr<ShaderProgram> orangeShaderProgram{};
+    std::unique_ptr<ShaderProgram> yellowShaderProgram{};
 
     try {
-        shaderProgram.reset(new ShaderProgram{1.0f, 0.5f, 0.2f, 1.0f});
+        orangeShaderProgram.reset(new ShaderProgram{1.0f, 0.5f, 0.2f, 1.0f});
+        yellowShaderProgram.reset(new ShaderProgram{1.0f, 1.0f, 0.0f, 1.0f});
     } catch (ShaderCompilationException& e) {
         std::string shaderTypeString;
         switch(static_cast<int>(e.getShaderType())) {
@@ -124,10 +126,11 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// draw
-        glUseProgram(*shaderProgram);
+        glUseProgram(*orangeShaderProgram);
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, vertices[0].size());
 
+        glUseProgram(*yellowShaderProgram);
         glBindVertexArray(VAO[1]);
         glDrawArrays(GL_TRIANGLES, 0, vertices[1].size());
 

@@ -1,16 +1,17 @@
 module;
 
 #include <string>
-using std::string;
 
 module Shader;
+
+using std::string;
 
 ShaderException::ShaderException(string infoLog)
     : mInfoLog{infoLog} {}
 
 ShaderException::~ShaderException() {}
 
-const char* ShaderException::what() const {
+const char* ShaderException::what() const noexcept {
     return mInfoLog.c_str();
 }
 

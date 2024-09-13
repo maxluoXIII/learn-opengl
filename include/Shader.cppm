@@ -2,6 +2,7 @@ module;
 
 #include <array>
 #include <glad/glad.h>
+#include <cstddef>
 
 export module Shader;
 

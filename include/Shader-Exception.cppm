@@ -1,22 +1,19 @@
 module;
 
-#include <format>
 #include <glad/glad.h>
 #include <string>
-
-using namespace std::string_literals;
-using std::string;
 
 export module Shader:Exception;
 
 import :Types;
 
+using std::string;
 
 export class ShaderException : public std::exception {
 public:
     ShaderException(string infoLog);
     virtual ~ShaderException() = 0;
-    const char* what() const override;
+    const char* what() const noexcept override;
 
 protected:
     string mInfoLog;

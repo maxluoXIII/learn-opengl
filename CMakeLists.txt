@@ -7,17 +7,17 @@ project(HelloOpenGL)
 find_package(OpenGL REQUIRED)
 
 # Set these variables if not using a preset
-set(OPENGL_INCLUDE_PATH "" CACHE PATH "Location of opengl headers")
+set(OPENGL_LIBS_INCLUDE_PATH "" CACHE PATH "Location of opengl headers")
 set(GLFW_LIB_PATH "" CACHE PATH "Location of glfw lib")
 
-if(NOT DEFINED OPENGL_INCLUDE_PATH
-    OR NOT IS_DIRECTORY "${OPENGL_INCLUDE_PATH}"
+if(NOT DEFINED OPENGL_LIBS_INCLUDE_PATH
+    OR NOT IS_DIRECTORY "${OPENGL_LIBS_INCLUDE_PATH}"
     OR NOT DEFINED GLFW_LIB_PATH
     OR NOT EXISTS "${GLFW_LIB_PATH}"
 )
     message(FATAL_ERROR
-        "OPENGL_INCLUDE_PATH and GLFW_LIB_PATH must be set:\n"
-        "OPENGL_INCLUDE_PATH: " ${OPENGL_INCLUDE_PATH} "\n"
+        "OPENGL_LIBS_INCLUDE_PATH and GLFW_LIB_PATH must be set:\n"
+        "OPENGL_LIBS_INCLUDE_PATH: " ${OPENGL_LIBS_INCLUDE_PATH} "\n"
         "GLFW_LIB_PATH: " ${GLFW_LIB_PATH}
     )
 endif()
@@ -44,7 +44,7 @@ set(HEADER_FILES
 )
 
 include_directories(
-    ${OPENGL_INCLUDE_PATH}
+    ${OPENGL_LIBS_INCLUDE_PATH}
 )
 
 add_executable(hello
