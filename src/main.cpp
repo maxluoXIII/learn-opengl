@@ -41,6 +41,10 @@ int main() {
 		return -1;
 	}
 
+    int numAttributes = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &numAttributes);
+    std::cout << "Maximum number of vertex attributes supported: " << numAttributes << std::endl;
+
 	// set size of rendering window
 	glViewport(0, 0, 800, 600);
 
